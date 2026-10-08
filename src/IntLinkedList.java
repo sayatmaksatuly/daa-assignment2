@@ -28,46 +28,100 @@ public class IntLinkedList {
     }
 
     public IntLinkedList(){
-        // creates an empty list
+        head = null;
+        tail = null;
+        size = 0;
     }
 
     public void add(int value){
-        // adds a value at the end
+        Node node = new Node(value, tail, null);
+        if (tail == null) {
+            head = node;
+        } else {
+            tail.next = node;
+        }
+        tail = node;
+        size++;
     }
 
     public void add(int index, int value){
-        // adds a value at index
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", size: " + size);
+        }
+        if (index == size) {
+            add(value);
+            return;
+        }
+        Node next = nodeAt(index);
+        Node node = new Node(value, next.prev, next);
+        if (next.prev == null) {
+            head = node;
+        } else {
+            next.prev.next = node;
+        }
+        next.prev = node;
+        size++;
     }
 
     public int get(int index){
-        // returns a value at index
-        return 0;
+        return nodeAt(index).value;
     }
 
     public void set(int index, int value){
-        // updates a value at index
+        nodeAt(index).value = value;
     }
 
     public int remove(int index){
-        // removes and returns value at index
-        return 0;
+        Node node = nodeAt(index);
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
+        return node.value;
     }
 
     public int size(){
-        // returns size of list
-        return 0;
+        return size;
     }
 
     public boolean isEmpty(){
-        // returns whether list is empty
-        return false;
+        return size == 0;
     }
 
     @Override
     public String toString() {
-        // returns String representation of list
-        // "[]" for empty list
-        // "[7, 8, 6]" for non-empty list
-        return super.toString();
+        StringBuilder result = new StringBuilder("[");
+        for (Node node = head; node != null; node = node.next) {
+            if (node != head) {
+                result.append(", ");
+            }
+            result.append(node.value);
+        }
+        return result.append(']').toString();
+    }
+
+    private Node nodeAt(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", size: " + size);
+        }
+        if (index < size / 2) {
+            Node node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        }
+        Node node = tail;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
+        }
+        return node;
     }
 }

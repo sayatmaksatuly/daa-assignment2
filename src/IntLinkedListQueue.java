@@ -1,42 +1,47 @@
+import java.util.NoSuchElementException;
+
 public class IntLinkedListQueue implements IntQueue{
+    private final IntLinkedList elements;
 
     public IntLinkedListQueue() {
-        // creates an empty queue
+        elements = new IntLinkedList();
     }
 
     @Override
     public void enqueue(int value) {
-        // adds a value to queue
+        elements.add(value);
     }
 
     @Override
     public int dequeue() {
-        // removes, and returns a value from queue
-        return 0;
+        checkNotEmpty();
+        return elements.remove(0);
     }
 
     @Override
     public int peek() {
-        // returns a value from queue
-        return 0;
+        checkNotEmpty();
+        return elements.get(0);
     }
 
     @Override
     public int size() {
-        // return size of queue
-        return 0;
+        return elements.size();
     }
 
     @Override
     public boolean isEmpty() {
-        // returns whether queue is empty
-        return false;
+        return elements.isEmpty();
     }
 
     @Override
     public String toString() {
-        // "[]" for empty queue
-        // "[7, 8, 6]" for queue containing elements: 7, 8, 6. (head-first)
-        return super.toString();
+        return elements.toString();
+    }
+
+    private void checkNotEmpty() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Queue is empty");
+        }
     }
 }
