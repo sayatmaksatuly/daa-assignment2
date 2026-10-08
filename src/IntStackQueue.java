@@ -1,39 +1,80 @@
+import java.util.NoSuchElementException;
+
 public class IntStackQueue implements IntQueue{
-    // use two stacks as back-end
+    private final IntArrayStack incoming;
+    private final IntArrayStack outgoing;
 
     public IntStackQueue() {
-        // creates an empty stack
+        incoming = new IntArrayStack();
+        outgoing = new IntArrayStack();
     }
 
     @Override
     public void enqueue(int value) {
-
+        incoming.push(value);
     }
 
     @Override
     public int dequeue() {
-        return 0;
+        prepareOutgoing();
+        return outgoing.pop();
     }
 
     @Override
     public int peek() {
-        return 0;
+        prepareOutgoing();
+        return outgoing.peek();
     }
 
     @Override
     public int size() {
-        return 0;
+        return incoming.size() + outgoing.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return incoming.isEmpty() && outgoing.isEmpty();
     }
 
     @Override
     public String toString() {
-        // "[]" for empty queue
-        // "[7, 8, 6]" for queue containing elements: 7, 8, 6. (head-first)
-        return super.toString();
+        StringBuilder result = new StringBuilder("[");
+        int outgoingCount = outgoing.size();
+        int incomingCount = incoming.size();
+        // Visit each stack in FIFO order and restore both original orders.
+        for (int i = 0; i < outgoingCount; i++) {
+            int value = outgoing.pop();
+            if (i > 0) {
+                result.append(", ");
+            }
+            result.append(value);
+            incoming.push(value);
+        }
+        for (int i = 0; i < outgoingCount; i++) {
+            outgoing.push(incoming.pop());
+        }
+        for (int i = 0; i < incomingCount; i++) {
+            outgoing.push(incoming.pop());
+        }
+        for (int i = 0; i < incomingCount; i++) {
+            int value = outgoing.pop();
+            if (outgoingCount > 0 || i > 0) {
+                result.append(", ");
+            }
+            result.append(value);
+            incoming.push(value);
+        }
+        return result.append(']').toString();
+    }
+
+    private void prepareOutgoing() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Queue is empty");
+        }
+        if (outgoing.isEmpty()) {
+            while (!incoming.isEmpty()) {
+                outgoing.push(incoming.pop());
+            }
+        }
     }
 }

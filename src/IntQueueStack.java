@@ -1,36 +1,59 @@
+import java.util.NoSuchElementException;
+
 public class IntQueueStack implements IntStack{
-    // use two queues as back-end
+    private IntLinkedListQueue elements = new IntLinkedListQueue();
+    private IntLinkedListQueue spare = new IntLinkedListQueue();
 
     @Override
     public void push(int value) {
-
+        elements.enqueue(value);
     }
 
     @Override
     public int pop() {
-        return 0;
+        moveToTop();
+        int value = elements.dequeue();
+        swapQueues();
+        return value;
     }
 
     @Override
     public int peek() {
-        return 0;
+        moveToTop();
+        int value = elements.dequeue();
+        spare.enqueue(value);
+        swapQueues();
+        return value;
     }
 
     @Override
     public int size() {
-        return 0;
+        return elements.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return elements.isEmpty();
     }
 
     @Override
     public String toString() {
-        // returns String representation of the stack
-        // "[]" for empty stack
-        // "[7, 8, 6]" for non-empty one (bottom-element-first)
-        return super.toString();
+        return elements.toString();
+    }
+
+    private void moveToTop() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Stack is empty");
+        }
+        // The queue stores bottom first; its last element is the stack top.
+        while (elements.size() > 1) {
+            spare.enqueue(elements.dequeue());
+        }
+    }
+
+    private void swapQueues() {
+        IntLinkedListQueue previous = elements;
+        elements = spare;
+        spare = previous;
     }
 }
