@@ -1,54 +1,64 @@
+import java.util.NoSuchElementException;
+
 public class IntLinkedListDeque implements IntDeque{
-    // use IntLinkedList as back-end for this deque
+    private final IntLinkedList elements;
 
     public IntLinkedListDeque() {
-        // creates an empty deque
+        elements = new IntLinkedList();
     }
 
     @Override
     public void addFirst(int value) {
-
+        elements.add(0, value);
     }
 
     @Override
     public void addLast(int value) {
-
+        elements.add(value);
     }
 
     @Override
     public int removeFirst() {
-        return 0;
+        checkNotEmpty();
+        return elements.remove(0);
     }
 
     @Override
     public int removeLast() {
-        return 0;
+        checkNotEmpty();
+        return elements.remove(elements.size() - 1);
     }
 
     @Override
     public int peekFirst() {
-        return 0;
+        checkNotEmpty();
+        return elements.get(0);
     }
 
     @Override
     public int peekLast() {
-        return 0;
+        checkNotEmpty();
+        return elements.get(elements.size() - 1);
     }
 
     @Override
     public int size() {
-        return 0;
+        return elements.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return elements.isEmpty();
     }
 
     @Override
     public String toString() {
-        // "[]" for empty deque
-        // "[7, 8, 6]" for deque containing elements: 7, 8, 6. (front-first)
-        return super.toString();
+        return elements.toString();
+    }
+
+    private void checkNotEmpty() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Deque is empty");
+        }
     }
 }
