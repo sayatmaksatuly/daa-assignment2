@@ -1,44 +1,47 @@
+import java.util.NoSuchElementException;
+
 public class IntArrayStack implements IntStack{
-    // uses IntArray as back-end
+    private final IntArray elements;
 
     public IntArrayStack(){
-        // creates empty stack
+        elements = new IntArray();
     }
 
     @Override
     public void push(int value) {
-        // pushes value on top of stack
+        elements.add(value);
     }
 
     @Override
     public int pop() {
-        // pops a value from top of stack
-        return 0;
+        checkNotEmpty();
+        return elements.remove(elements.size() - 1);
     }
 
     @Override
     public int peek() {
-        // returns the value from top of stack without removing it
-        return 0;
+        checkNotEmpty();
+        return elements.get(elements.size() - 1);
     }
 
     @Override
     public int size() {
-        // returns the size of the stack
-        return 0;
+        return elements.size();
     }
 
     @Override
     public boolean isEmpty() {
-        // returns whether the stack is empty
-        return false;
+        return elements.isEmpty();
     }
 
     @Override
     public String toString() {
-        // returns String representation of the stack
-        // "[]" for empty stack
-        // "[7, 8, 6]" for non-empty one (bottom-element-first)
-        return super.toString();
+        return elements.toString();
+    }
+
+    private void checkNotEmpty() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Stack is empty");
+        }
     }
 }
